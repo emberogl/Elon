@@ -6,137 +6,96 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Elon
-{
+{   
+    /// <summary>
+    /// This might be the controller class, but it's very challenging for me to
+    /// figure out how to properly separate view (console writelines) from immediate logic.
+    /// 
+    /// I can see how MVC would be applied to complex API structures, but I'm not sure
+    /// how to go about it in simple console-based applications.
+    /// </summary>
     internal class Controller
     {
+        // Begins menu interaction.
         public static void Start() 
         {
-            Menu();
+            View.Menu();
         }
 
-        public static void Menu()
-        {
-            Console.Clear();
-            if (CarHandler.Cars!.Count == 0)
-            {
-                Console.WriteLine("No cars have been found.");
-                AddCar();
-            }
-            else
-            {
-                int CarCount = 1;
-                foreach (Car car in CarHandler.Cars)
-                {
-                    Console.WriteLine($"({CarCount}) A {car.Color} car has been found.");
-                    CarCount++;
-                }
-                Console.WriteLine("\n Drive a car");
-                Console.WriteLine("Delete a car");
-                Console.WriteLine("Add a car");
-                Console.Write("\n drive | delete | add: ");
-                string Choice = Console.ReadLine()!;
-                switch (Choice)
-                {
-                    case "drive":
-                        DriveSelection();
-                        break;
-                    case "delete":
-                        Delete();
-                        break;
-                    case "add":
-                        AddCar();
-                        break;
-                    default:
-                        Menu();
-                        break;
-                }
-            }
-        }
-
+        // Lets user select to drive a car from the list they have created.
         public static void DriveSelection()
         {
             Console.Clear();
             int CarCount = 1;
-            foreach (Car car in CarHandler.Cars!)
+            foreach (Car car in Model.Cars!)
             {
                 Console.WriteLine($"({CarCount}) A {car.Color} car has been found.");
                 CarCount++;
             }
-            Console.Write("Which car do you want to drive? (number): ");
+            Console.Write("\nWhich car do you want to drive? (number): ");
             string Choice = Console.ReadLine()!;
             bool IsInt = int.TryParse(Choice, out int intChoice);
-            if (!IsInt) { DriveSelection(); }
+            if (!IsInt) { View.InvalidMessage(); }
             else if (intChoice < CarCount && intChoice > 0)
             {
-                View.Drive(CarHandler.Cars[intChoice-1]);
+                View.Drive(Model.Cars[intChoice-1]);
             }
-            else { Console.Clear(); Console.WriteLine("Invalid car."); Console.ReadKey(); Menu(); }
+            else { View.InvalidMessage(); }
         }
 
-        public static void Delete()
+        // Lets user delete a car from the list they have created.
+        public static void DeleteCar()
         {
             Console.Clear();
             int CarCount = 1;
-            foreach (Car car in CarHandler.Cars!)
+            foreach (Car car in Model.Cars!)
             {
                 Console.WriteLine($"({CarCount}) A {car.Color} car has been found.");
                 CarCount++;
             }
-            Console.Write("Which car do you want to delete? (number): ");
+            Console.Write("\nWhich car do you want to delete? (number): ");
             string Choice = Console.ReadLine()!;
             bool IsInt = int.TryParse(Choice, out int intChoice);
             if (!IsInt) { DriveSelection(); }
+            else if (intChoice == 1 && Model.Cars.Count == 1)
+            {
+                Model.Cars.RemoveAt(0);
+                Model.DeleteFile(); // Gets rid of file since all cars have been deleted.
+                View.Menu();
+            }
             else if (intChoice < CarCount && intChoice > 0)
             {
-                CarHandler.Cars.RemoveAt(intChoice);
-                Menu();
+                Model.Cars.RemoveAt(intChoice - 1);
+                Model.ExportCars(); // Reflects car list update on disk file.
+                View.Menu();
             }
-            else { Console.Clear(); Console.WriteLine("Invalid car."); Console.ReadKey(); Menu(); }
+            else { View.InvalidMessage(); }
         }
 
+        // Lets user add a car with a color to the list.
         public static void AddCar()
         {
-            Console.WriteLine("Input the color car you want to add:\n\n");
-            Console.WriteLine("Red\nGreen\nBlue\nYellow\nPink\nOrange\nWhite\nBlack");
+            Console.Clear();
+            Console.WriteLine("Input the color car you want to add:\n");
+            Console.WriteLine("Red\nGreen\nBlue\nYellow\nPink\nOrange\nWhite\nBlack\n");
             string Choice = Console.ReadLine()!;
-            switch (Choice)
+            if (Model.ColorIndex.Contains(Choice))
             {
-                case "red":
-                    Add(Color.Red);
-                    break;
-                case "green":
-                    Add(Color.Green);
-                    break;
-                case "blue":
-                    Add(Color.Blue);
-                    break;
-                case "yellow":
-                    Add(Color.Yellow);
-                    break;
-                case "pink":
-                    Add(Color.Pink);
-                    break;
-                case "orange":
-                    Add(Color.Orange);
-                    break;
-                case "white":
-                    Add(Color.White);
-                    break;
-                case "black":
-                    Add(Color.Black);
-                    break;
-                default:
-                    Menu();
-                    break;
+                Add(Choice);
+            }
+            else
+            {
+                View.InvalidMessage();
+                View.Menu();
             }
 
-            static void Add(Color color)
+            static void Add(string color)
             {
                 Car car = new Car();
                 car.Color = color;
-                CarHandler.Cars!.Add(car);
-
-                Menu();
+                Model.Cars!.Add(car);
+                Model.ExportCars(); // Reflects car list update on disk file.
+                View.Menu();
             }
         }
     }

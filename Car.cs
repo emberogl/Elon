@@ -9,15 +9,16 @@ namespace Elon
 {
     /// <summary>
     /// Attributes of car defines its capabilities.
-    /// Method for displaying car status,
+    /// Methods for displaying car status, getting private attributes,
     /// and drive and recharge to resemble driving logic.
     /// </summary>
     internal class Car
     {
         #region Attributes
         private int _battery = 100;
-        private int _drivenMeters = 0;
-        public Color Color;
+        private double _drivenMeters = 0;
+        public static readonly int MetersPerBatteryUsage = 20;
+        public string? Color { get; set; }
         #endregion
 
         #region Methods
@@ -27,7 +28,7 @@ namespace Elon
         }
         public void Drive()
         {
-            _drivenMeters += 20;
+            _drivenMeters += MetersPerBatteryUsage;
             _battery -= 1;
         }
 
@@ -37,7 +38,7 @@ namespace Elon
             _battery = 100;
         }
 
-        public int GetDrivenMeters()
+        public double GetDrivenMeters()
         {
             return _drivenMeters;
         }
