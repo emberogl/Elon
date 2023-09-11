@@ -77,7 +77,7 @@ namespace Elon
         {
             Console.Clear();
             Console.WriteLine("Input the color car you want to add:\n");
-            Console.WriteLine("Red\nGreen\nBlue\nYellow\nPink\nOrange\nWhite\nBlack\n");
+            Console.WriteLine("red\ngreen\nblue\nyellow\npink\norange\nwhite\nblack\n");
             string Choice = Console.ReadLine()!;
             if (Model.ColorIndex.Contains(Choice))
             {
