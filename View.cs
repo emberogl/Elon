@@ -81,6 +81,7 @@ namespace Elon
                 Console.WriteLine($"Press any key to drive your {car.Color} car.\n");
                 Console.WriteLine(string.Concat(Enumerable.Repeat("█", (int)car.GetDrivenMeters() / Car.MetersPerBatteryUsage))); // Driven distance visualizer
                 Console.WriteLine($"\n{car.CarStatus()}");
+                Model.ExportCars(); // Reflecting kilometerage gain to disk file.
                 Console.ReadKey();
                 car.Drive();
             }

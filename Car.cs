@@ -18,17 +18,19 @@ namespace Elon
         private int _battery = 100;
         private double _drivenMeters = 0;
         public static readonly int MetersPerBatteryUsage = 20;
+        public double Kilometerage { get; set; }
         public string? Color { get; set; }
         #endregion
 
         #region Methods
         public string CarStatus()
         {
-            return $"Battery: {_battery}% | Distance: {_drivenMeters/1000} km";
+            return $"Battery: {_battery}% | Distance: {_drivenMeters/1000} km | Kilometerage: {Kilometerage/1000} km";
         }
         public void Drive()
         {
             _drivenMeters += MetersPerBatteryUsage;
+            Kilometerage += MetersPerBatteryUsage;
             _battery -= 1;
         }
 
