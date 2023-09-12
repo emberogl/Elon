@@ -45,7 +45,7 @@ namespace Elon
             return _drivenMeters;
         }
 
-        public int GetBatteryCapacity()
+        public int GetBattery()
         {
             return _battery;
         }

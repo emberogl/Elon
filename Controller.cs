@@ -13,6 +13,10 @@ namespace Elon
     /// 
     /// I can see how MVC would be applied to complex API structures, but I'm not sure
     /// how to go about it in simple console-based applications.
+    /// 
+    /// UPDATE SEP 12 23: After a further elaboration and Airtame examples of MVC,
+    /// I have a better understanding of how I was supposed to go about this,
+    /// including proper use of class instances.
     /// </summary>
     internal class Controller
     {

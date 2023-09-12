@@ -61,7 +61,7 @@ namespace Elon
         {
             while (true)
             {
-                if (car.GetBatteryCapacity() <= 0)
+                if (car.GetBattery() <= 0)
                 {
                     Console.Clear();
                     Console.WriteLine("The battery has run out! Would you like to recharge, or go back to main menu?");
